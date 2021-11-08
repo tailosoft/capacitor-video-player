@@ -175,6 +175,10 @@ public class CapacitorVideoPlayerPlugin extends Plugin {
             if (call.getData().has("subtitleOptions")) {
                 subTitleOptions = call.getObject("subtitleOptions");
             }
+            Boolean hideCloseButton = false;
+            if (call.getData().has("hideCloseButton")) {
+                hideCloseButton = call.getBoolean("hideCloseButton", false);
+            }
 
             JSObject _headers = new JSObject();
             if (call.getData().has("headers")) {
@@ -255,7 +259,7 @@ public class CapacitorVideoPlayerPlugin extends Plugin {
                             playerId,
                             false,
                             null
-                        );
+                        , hideCloseButton);
                     } else {
                         Map<String, Object> info = new HashMap<String, Object>() {
                             {
@@ -298,7 +302,7 @@ public class CapacitorVideoPlayerPlugin extends Plugin {
                             JSObject ret = new JSObject();
                             ret.put("method", "isPlaying");
                             if (fsFragment != null) {
-                                boolean playing = fsFragment.isPlaying();
+                                boolean playing = fsFragment != null && fsFragment.isPlaying();
                                 ret.put("result", true);
                                 ret.put("value", playing);
                                 call.resolve(ret);
@@ -463,7 +467,7 @@ public class CapacitorVideoPlayerPlugin extends Plugin {
                             JSObject ret = new JSObject();
                             ret.put("method", "getCurrentTime");
                             if (fsFragment != null) {
-                                int curTime = fsFragment.getCurrentTime();
+                                int curTime = fsFragment == null ? 0 : fsFragment.getCurrentTime();
                                 ret.put("result", true);
                                 ret.put("value", curTime);
                                 call.resolve(ret);
@@ -998,7 +1002,7 @@ public class CapacitorVideoPlayerPlugin extends Plugin {
                                 fsPlayerId,
                                 true,
                                 videoId
-                            );
+                            , false);
                         } else {
                             Toast.makeText(context, "No Video files found ", Toast.LENGTH_SHORT).show();
                             Map<String, Object> info = new HashMap<String, Object>() {
@@ -1032,7 +1036,8 @@ public class CapacitorVideoPlayerPlugin extends Plugin {
         Boolean isTV,
         String playerId,
         Boolean isInternal,
-        Long videoId
+        Long videoId,
+        Boolean hideCloseButton
     ) {
         Log.v(TAG, "§§§§ createFullScreenFragment chromecast: " + chromecast);
 
@@ -1056,7 +1061,7 @@ public class CapacitorVideoPlayerPlugin extends Plugin {
                 playerId,
                 isInternal,
                 videoId
-            );
+            , hideCloseButton);
         bridge
             .getActivity()
             .runOnUiThread(

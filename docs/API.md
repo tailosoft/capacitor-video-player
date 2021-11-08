@@ -480,6 +480,7 @@ Stop all players playing
 | **`smallTitle`**      | <code>string</code>                                         | Subtitle shown below the title in the player (Android) by Manuel García Marín (https://github.com/PhantomPainX)                                             |
 | **`accentColor`**     | <code>string</code>                                         | ExoPlayer Progress Bar and Spinner color (Android) by Manuel García Marín (https://github.com/PhantomPainX) Must be a valid hex color code default: #FFFFFF |
 | **`chromecast`**      | <code>boolean</code>                                        | Chromecast enable/disable (Android) by Manuel García Marín (https://github.com/PhantomPainX) default: true                                                  |
+| **hideCloseButton**   | <code>boolean</code>                                        | Whether to hide the close button                                                              |
 
 
 #### SubTitleOptions

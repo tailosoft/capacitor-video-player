@@ -96,6 +96,7 @@ public class FullscreenExoPlayerFragment extends Fragment {
     public String smallTitle;
     public String accentColor;
     public Boolean chromecast;
+    public Boolean hideCloseButton;
 
     private static final String TAG = FullscreenExoPlayerFragment.class.getName();
     public static final long UNKNOWN_TIME = -1L;
@@ -280,6 +281,11 @@ public class FullscreenExoPlayerFragment extends Fragment {
                 }
             }
         );
+
+        if (hideCloseButton) {
+            closeBtn.setVisibility(View.GONE);
+        }
+
         // Listening for events
         playbackStateListener = new PlaybackStateListener();
         if (isTV) {

@@ -175,6 +175,10 @@ export interface capVideoPlayerOptions {
      * default: true
      */
     chromecast?: boolean;
+    /**
+     * Whether to hide the close button
+     */
+    hideCloseButton?: boolean
 }
 export interface capVideoPlayerIdOptions {
     /**

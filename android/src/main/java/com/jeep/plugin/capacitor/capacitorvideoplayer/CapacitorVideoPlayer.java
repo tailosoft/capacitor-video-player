@@ -34,7 +34,8 @@ public class CapacitorVideoPlayer {
         Boolean isTV,
         String playerId,
         Boolean isInternal,
-        Long videoId
+        Long videoId,
+        Boolean hideCloseButton
     ) {
         FullscreenExoPlayerFragment fsFragment = new FullscreenExoPlayerFragment();
 
@@ -56,6 +57,7 @@ public class CapacitorVideoPlayer {
         fsFragment.playerId = playerId;
         fsFragment.isInternal = isInternal;
         fsFragment.videoId = videoId;
+        fsFragment.hideCloseButton = hideCloseButton;
         return fsFragment;
     }
 
