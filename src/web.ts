@@ -675,11 +675,11 @@ export class CapacitorVideoPlayerWeb
     videoContainer.addEventListener('videoPlayerReady', (ev: any) => {
       this.handlePlayerReady(ev.detail);
     });
-    videoContainer.addEventListener('videoPlayerExit', () => {
+    videoContainer.addEventListener('videoPlayerExit', (ev: any) => {
       if (mode === 'fullscreen') {
         videoContainer.remove();
       }
-      this.handlePlayerExit();
+      this.handlePlayerExit(ev.detail);
     });
 
     if (mode === 'embedded') {
@@ -750,9 +750,8 @@ export class CapacitorVideoPlayerWeb
   private handlePlayerEnded(data: any) {
     this.notifyListeners('jeepCapVideoPlayerEnded', data);
   }
-  private handlePlayerExit() {
-    const retData: any = { dismiss: true };
-    this.notifyListeners('jeepCapVideoPlayerExit', retData);
+  private handlePlayerExit(data: any) {
+    this.notifyListeners('jeepCapVideoPlayerExit', data);
   }
   private handlePlayerReady(data: any) {
     this.notifyListeners('jeepCapVideoPlayerReady', data);

@@ -1030,6 +1030,7 @@ public class CapacitorVideoPlayerPlugin extends Plugin {
                         final JSObject data = new JSObject();
                         if (Integer.valueOf((String) this.getInfo().get("dismiss")) == 1) ret = true;
                         data.put("dismiss", ret);
+                        data.put("currentTime", this.getInfo().get("currentTime"));
                         bridge
                             .getActivity()
                             .runOnUiThread(
