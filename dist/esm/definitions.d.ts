@@ -179,6 +179,10 @@ export interface capVideoPlayerOptions {
      * Whether to hide the close button
      */
     hideCloseButton?: boolean
+    /**
+     * Hide Progress bar in order to disable seek/rewind time
+     */
+    disableSeeking?: boolean
 }
 export interface capVideoPlayerIdOptions {
     /**

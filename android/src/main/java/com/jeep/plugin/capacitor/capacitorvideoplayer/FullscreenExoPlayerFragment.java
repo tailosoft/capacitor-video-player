@@ -35,6 +35,7 @@ import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.Format;
+import com.google.android.exoplayer2.ForwardingPlayer;
 import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.MediaMetadata;
@@ -97,6 +98,7 @@ public class FullscreenExoPlayerFragment extends Fragment {
     public String accentColor;
     public Boolean chromecast;
     public Boolean hideCloseButton;
+    public Boolean disableSeeking;
 
     private static final String TAG = FullscreenExoPlayerFragment.class.getName();
     public static final long UNKNOWN_TIME = -1L;
@@ -119,6 +121,8 @@ public class FullscreenExoPlayerFragment extends Fragment {
     private ImageButton closeBtn;
     private ImageButton pipBtn;
     private ImageButton resizeBtn;
+    private ImageButton fastForward;
+    private ImageButton fastBackward;
     private ConstraintLayout constLayout;
     private LinearLayout linearLayout;
     private TextView header_tv;
@@ -267,6 +271,8 @@ public class FullscreenExoPlayerFragment extends Fragment {
 
         closeBtn = view.findViewById(R.id.exo_close);
         pipBtn = view.findViewById(R.id.exo_pip);
+        fastForward = (ImageButton) view.findViewById(R.id.exo_ffwd);
+        fastBackward = (ImageButton) view.findViewById(R.id.exo_rew);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || !pipEnabled) {
             pipBtn.setVisibility(View.GONE);
         }
@@ -285,6 +291,12 @@ public class FullscreenExoPlayerFragment extends Fragment {
         if (hideCloseButton) {
             closeBtn.setVisibility(View.GONE);
         }
+
+        if (disableSeeking) {
+            fastForward.setClickable(false);
+            fastBackward.setClickable(false);
+        }
+
 
         // Listening for events
         playbackStateListener = new PlaybackStateListener();
@@ -663,9 +675,38 @@ public class FullscreenExoPlayerFragment extends Fragment {
                     .setBandwidthMeter(bandwidthMeter)
                     .build();
         }
+        if (disableSeeking) {
+            ForwardingPlayer forwardingPlayer =
+                    new ForwardingPlayer(player) {
+                        @Override
+                        public boolean isCommandAvailable(int command) {
+                            if (command == COMMAND_SEEK_IN_CURRENT_MEDIA_ITEM) {
+                                return false;
+                            }
+                            return super.isCommandAvailable(command);
+                        }
 
-        playerView.setPlayer(player);
-
+                        @Override
+                        public Commands getAvailableCommands() {
+                            return super.getAvailableCommands()
+                                    .buildUpon()
+                                    .removeAll(COMMAND_SEEK_IN_CURRENT_MEDIA_ITEM,
+                                            COMMAND_SEEK_TO_DEFAULT_POSITION,
+                                            COMMAND_SEEK_IN_CURRENT_MEDIA_ITEM,
+                                            COMMAND_SEEK_TO_PREVIOUS_MEDIA_ITEM,
+                                            COMMAND_SEEK_TO_PREVIOUS,
+                                            COMMAND_SEEK_TO_NEXT_MEDIA_ITEM,
+                                            COMMAND_SEEK_TO_NEXT,
+                                            COMMAND_SEEK_TO_MEDIA_ITEM,
+                                            COMMAND_SEEK_BACK,
+                                            COMMAND_SEEK_FORWARD)
+                                    .build();
+                        }
+                    };
+            playerView.setPlayer(forwardingPlayer);
+        } else {
+            playerView.setPlayer(player);
+        }
         MediaSource mediaSource;
         if (!isInternal) {
             if (videoPath.substring(0, 21).equals("file:///android_asset")) {

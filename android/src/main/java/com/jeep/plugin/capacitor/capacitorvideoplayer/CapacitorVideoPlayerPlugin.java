@@ -179,6 +179,10 @@ public class CapacitorVideoPlayerPlugin extends Plugin {
             if (call.getData().has("hideCloseButton")) {
                 hideCloseButton = call.getBoolean("hideCloseButton", false);
             }
+            Boolean disableSeeking = false;
+            if (call.getData().has("disableSeeking")) {
+                disableSeeking = call.getBoolean("disableSeeking", false);
+            }
 
             JSObject _headers = new JSObject();
             if (call.getData().has("headers")) {
@@ -259,7 +263,7 @@ public class CapacitorVideoPlayerPlugin extends Plugin {
                             playerId,
                             false,
                             null
-                        , hideCloseButton);
+                        , hideCloseButton, disableSeeking);
                     } else {
                         Map<String, Object> info = new HashMap<String, Object>() {
                             {
@@ -1002,7 +1006,7 @@ public class CapacitorVideoPlayerPlugin extends Plugin {
                                 fsPlayerId,
                                 true,
                                 videoId
-                            , false);
+                            , false, false);
                         } else {
                             Toast.makeText(context, "No Video files found ", Toast.LENGTH_SHORT).show();
                             Map<String, Object> info = new HashMap<String, Object>() {
@@ -1037,7 +1041,8 @@ public class CapacitorVideoPlayerPlugin extends Plugin {
         String playerId,
         Boolean isInternal,
         Long videoId,
-        Boolean hideCloseButton
+        Boolean hideCloseButton,
+        Boolean disableSeeking
     ) {
         Log.v(TAG, "§§§§ createFullScreenFragment chromecast: " + chromecast);
 
@@ -1061,7 +1066,7 @@ public class CapacitorVideoPlayerPlugin extends Plugin {
                 playerId,
                 isInternal,
                 videoId
-            , hideCloseButton);
+            , hideCloseButton, disableSeeking);
         bridge
             .getActivity()
             .runOnUiThread(
