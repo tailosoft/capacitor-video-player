@@ -840,6 +840,88 @@ public class CapacitorVideoPlayerPlugin extends Plugin {
             );
     }
 
+    @PluginMethod
+    public void unloadPlayer(PluginCall call) {
+        this.call = call;
+        JSObject ret = new JSObject();
+        ret.put("method", "unloadPlayer");
+        String playerId = call.getString("playerId");
+        if (playerId == null) {
+            ret.put("result", false);
+            ret.put("message", "Must provide a PlayerId");
+            call.resolve(ret);
+            return;
+        }
+        if ("fullscreen".equals(mode) && fsPlayerId.equals(playerId)) {
+            bridge
+                .getActivity()
+                .runOnUiThread(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            if (fsFragment != null) {
+                                fsFragment.unload();
+                                JSObject ret = new JSObject();
+                                ret.put("result", true);
+                                ret.put("method", "unloadPlayer");
+                                ret.put("value", true);
+                                call.resolve(ret);
+                            } else {
+                                ret.put("result", false);
+                                ret.put("message", "player is not loaded");
+                                call.resolve(ret);
+                            }
+                        }
+                    }
+                );
+        } else {
+            ret.put("result", false);
+            ret.put("message", "player is not defined");
+            call.resolve(ret);
+        }
+    }
+
+    @PluginMethod
+    public void expandPlayer(PluginCall call) {
+        this.call = call;
+        JSObject ret = new JSObject();
+        ret.put("method", "expandPlayer");
+        String playerId = call.getString("playerId");
+        if (playerId == null) {
+            ret.put("result", false);
+            ret.put("message", "Must provide a PlayerId");
+            call.resolve(ret);
+            return;
+        }
+        if ("fullscreen".equals(mode) && fsPlayerId.equals(playerId)) {
+            bridge
+                .getActivity()
+                .runOnUiThread(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            if (fsFragment != null) {
+                                fsFragment.expandPlayer();
+                                JSObject ret = new JSObject();
+                                ret.put("result", true);
+                                ret.put("method", "expandPlayer");
+                                ret.put("value", true);
+                                call.resolve(ret);
+                            } else {
+                                ret.put("result", false);
+                                ret.put("message", "player is not loaded");
+                                call.resolve(ret);
+                            }
+                        }
+                    }
+                );
+        } else {
+            ret.put("result", false);
+            ret.put("message", "player is not defined");
+            call.resolve(ret);
+        }
+    }
+
     public boolean isDeviceTV(Context context) {
         //Since Android TV is only API 21+ that is the only time we will compare configurations
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

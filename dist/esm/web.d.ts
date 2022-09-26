@@ -92,6 +92,18 @@ export declare class CapacitorVideoPlayerWeb extends WebPlugin implements Capaci
      *
      */
     stopAllPlayers(): Promise<capVideoPlayerResult>;
+    /**
+     * Unload player
+     *
+     * @param options
+     */
+    unloadPlayer(options: capVideoPlayerIdOptions): Promise<capVideoPlayerResult>;
+    /**
+     * Expand player
+     *
+     * @param options
+     */
+    expandPlayer(options: capVideoPlayerIdOptions): Promise<capVideoPlayerResult>;
     private checkSize;
     private _initializeVideoPlayer;
     private _getContainerElement;

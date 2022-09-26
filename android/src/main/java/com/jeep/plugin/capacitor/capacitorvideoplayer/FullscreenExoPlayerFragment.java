@@ -331,6 +331,14 @@ public class FullscreenExoPlayerFragment extends Fragment {
                     new Runnable() {
                         @Override
                         public void run() {
+                            closeBtn.setOnClickListener(
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        playerExit();
+                                    }
+                                }
+                            );
                             // Set the onKey listener
                             view.setFocusableInTouchMode(true);
                             view.requestFocus();
@@ -412,11 +420,13 @@ public class FullscreenExoPlayerFragment extends Fragment {
      * Perform backPressed Action
      */
     private void backPressed() {
-        if (
-            !isInPictureInPictureMode &&
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.N &&
-            packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE) &&
-            isPIPModeeEnabled
+        if (hideCloseButton) {
+            reducePlayer();
+        } else if (
+                !isInPictureInPictureMode &&
+                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.N &&
+                        packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE) &&
+                        isPIPModeeEnabled
         ) {
             pictureInPictureMode();
         } else {
@@ -446,6 +456,19 @@ public class FullscreenExoPlayerFragment extends Fragment {
             toastMessage = Toast.makeText(context, "Mode Fit", Toast.LENGTH_SHORT);
             toastMessage.show();
         }
+    }
+
+    public void reducePlayer() {
+        pause();
+        view.setVisibility(View.GONE);
+    }
+
+    public void expandPlayer() {
+        view.setVisibility(View.VISIBLE);
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.requestFocusFromTouch();
+        play();
     }
 
     private void playerExit() {
@@ -652,9 +675,11 @@ public class FullscreenExoPlayerFragment extends Fragment {
      * Leave the fullsreen mode and reset the status bar to visible
      */
     private void showSystemUI() {
-        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        getActivity().getWindow().getDecorView().setSystemUiVisibility(View.VISIBLE);
+        if (getActivity() != null) {
+            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            getActivity().getWindow().getDecorView().setSystemUiVisibility(View.VISIBLE);
+        }
     }
 
     /**
@@ -1059,6 +1084,15 @@ public class FullscreenExoPlayerFragment extends Fragment {
     }
 
     /**
+     * unload the player
+     */
+    public void unload() {
+        if (player != null) {
+            playerExit();
+        }
+    }
+
+    /**
      * Player Event Listener
      */
     private class PlaybackStateListener implements Player.EventListener {
@@ -1089,6 +1123,9 @@ public class FullscreenExoPlayerFragment extends Fragment {
                     linearLayout.setVisibility(View.INVISIBLE);
                     Log.v(TAG, "**** in ExoPlayer.STATE_READY firstReadyToPlay " + firstReadyToPlay);
 
+                    if (view.getVisibility() != View.VISIBLE) {
+                        expandPlayer();
+                    }
                     if (firstReadyToPlay) {
                         firstReadyToPlay = false;
                         NotificationCenter.defaultCenter().postNotification("playerItemReady", info);

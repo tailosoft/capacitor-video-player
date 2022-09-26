@@ -510,6 +510,70 @@ export class CapacitorVideoPlayerWeb extends WebPlugin {
             value: true,
         });
     }
+    /**
+     * Unload player
+     *
+     * @param options
+     */
+    async unloadPlayer(options) {
+        if (options == null) {
+            return Promise.resolve({
+                result: false,
+                method: 'unloadPlayer',
+                message: 'Must provide a capVideoPlayerIdOptions object',
+            });
+        }
+        let playerId = options.playerId ? options.playerId : '';
+        if (playerId == null || playerId.length === 0) {
+            playerId = 'fullscreen';
+        }
+        if (this._players[playerId]) {
+            return Promise.resolve({
+                method: 'unloadPlayer',
+                result: true,
+                value: true,
+            });
+        }
+        else {
+            return Promise.resolve({
+                method: 'unloadPlayer',
+                result: false,
+                message: 'Given PlayerId does not exist)',
+            });
+        }
+    }
+    /**
+     * Expand player
+     *
+     * @param options
+     */
+    async expandPlayer(options) {
+        if (options == null) {
+            return Promise.resolve({
+                result: false,
+                method: 'expandPlayer',
+                message: 'Must provide a capVideoPlayerIdOptions object',
+            });
+        }
+        let playerId = options.playerId ? options.playerId : '';
+        if (playerId == null || playerId.length === 0) {
+            playerId = 'fullscreen';
+        }
+        if (this._players[playerId]) {
+            return Promise.resolve({
+                method: 'expandPlayer',
+                result: true,
+                value: true,
+            });
+        }
+        else {
+            return Promise.resolve({
+                method: 'expandPlayer',
+                result: false,
+                message: 'Given PlayerId does not exist)',
+            });
+        }
+    }
     checkSize(options) {
         const playerSize = {
             width: options.width ? options.width : 320,

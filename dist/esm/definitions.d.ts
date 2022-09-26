@@ -74,6 +74,16 @@ export interface CapacitorVideoPlayerPlugin {
      *
      */
     stopAllPlayers(): Promise<capVideoPlayerResult>;
+    /**
+     * Unload player
+     *
+     */
+    unloadPlayer(options: capVideoPlayerIdOptions): Promise<capVideoPlayerResult>;
+    /**
+     * Expand player
+     *
+     */
+    expandPlayer(options: capVideoPlayerIdOptions): Promise<capVideoPlayerResult>;
 }
 export interface capEchoOptions {
     /**
@@ -178,11 +188,11 @@ export interface capVideoPlayerOptions {
     /**
      * Whether to hide the close button
      */
-    hideCloseButton?: boolean
+    hideCloseButton?: boolean;
     /**
      * Hide Progress bar in order to disable seek/rewind time
      */
-    disableSeeking?: boolean
+    disableSeeking?: boolean;
 }
 export interface capVideoPlayerIdOptions {
     /**
