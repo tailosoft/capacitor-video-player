@@ -1008,8 +1008,8 @@ public class FullscreenExoPlayerFragment extends Fragment {
      * Get the player current position
      * @return int in seconds
      */
-    public int getCurrentTime() {
-        return player.getCurrentPosition() == UNKNOWN_TIME ? 0 : (int) (player.getCurrentPosition() / 1000);
+    public double getCurrentTime() {
+        return player.getCurrentPosition() == UNKNOWN_TIME ? 0 : (double) player.getCurrentPosition() / 1000;
     }
 
     /**

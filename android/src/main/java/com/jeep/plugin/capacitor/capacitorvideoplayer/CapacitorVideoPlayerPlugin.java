@@ -471,7 +471,7 @@ public class CapacitorVideoPlayerPlugin extends Plugin {
                             JSObject ret = new JSObject();
                             ret.put("method", "getCurrentTime");
                             if (fsFragment != null) {
-                                int curTime = fsFragment == null ? 0 : fsFragment.getCurrentTime();
+                                double curTime = fsFragment == null ? 0 : fsFragment.getCurrentTime();
                                 ret.put("result", true);
                                 ret.put("value", curTime);
                                 call.resolve(ret);
